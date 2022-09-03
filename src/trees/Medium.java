@@ -2,10 +2,15 @@ package trees;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
+import sun.reflect.generics.tree.Tree;
 
 public class Medium {
 
@@ -90,28 +95,28 @@ public class Medium {
       int n = stack.size();
       flag = !flag;
 
-      Stack<Node> child = new Stack<>();
+      Stack<Node> curr = new Stack<>();
       for (int i = 1; i <= n; i++) {
 
         Node temp = stack.pop();
         ans.add(temp.data);
         if (flag) {
           if (temp.left != null) {
-            child.push(temp.left);
+            curr.push(temp.left);
           }
           if (temp.right != null) {
-            child.push(temp.right);
+            curr.push(temp.right);
           }
         } else {
           if (temp.right != null) {
-            child.push(temp.right);
+            curr.push(temp.right);
           }
           if (temp.left != null) {
-            child.push(temp.left);
+            curr.push(temp.left);
           }
         }
       }
-      stack = child;
+      stack = curr;
     }
     return ans;
   }
@@ -133,29 +138,29 @@ public class Medium {
     while (!q.isEmpty()) {
       int n = q.size();
 
-      boolean hasChild = false;
-      boolean hasNoChild = false;
+      boolean hascurr = false;
+      boolean hasNocurr = false;
 
       for (int i = 1; i <= n; i++) {
 
         Node temp = q.poll();
 
         if (temp.left == null && temp.right == null) {
-          hasNoChild = true;
+          hasNocurr = true;
           // continue;
         }
 
         if (temp.left != null) {
           q.add(temp.left);
-          hasChild = true;
+          hascurr = true;
         }
 
         if (temp.right != null) {
           q.add(temp.right);
-          hasChild = true;
+          hascurr = true;
         }
 
-        if (hasChild && hasNoChild) {
+        if (hascurr && hasNocurr) {
           return false;
         }
       }
@@ -230,48 +235,446 @@ public class Medium {
 
   }
 
+  static class pair {
+
+    int non = 0;
+    int sum = 0;
+  }
+
+  static int count = 0;
+
   public static int averageOfSubtree(TreeNode root) {
+    aos(root);
+    return count;
+  }
+
+  public static pair aos(TreeNode root) {
+    if (root == null) {
+      return new pair();
+    }
+    pair left = aos(root.left);
+    pair right = aos(root.right);
+    pair self = new pair();
+    self.sum = left.sum + right.sum + root.val;
+    self.non = left.non + right.non + 1;
+    int avg = (self.sum) / (self.non);
+    if (avg == root.val) {
+      count++;
+    }
+    return self;
+  }
+
+  int sum = 0;
+
+  public int sumEvenGrandparent(TreeNode root) {
+    seg(root, null, null);
+    return sum;
+  }
+
+  public void seg(TreeNode root, TreeNode parent, TreeNode grandParent) {
+    if (root == null) {
+      return;
+    }
+    if (grandParent != null && (grandParent.val & 1) == 0) {
+      sum += root.val;
+    }
+    seg(root.left, root, parent);
+    seg(root.right, root, parent);
+  }
+
+  static int sumA = 0;
+  public static TreeNode bstToGst(TreeNode root) {
+    sumA = totalSum(root);
+    changeTree(root);
+    return root;
+  }
+  public static int totalSum(TreeNode root) {
+    if (root == null) {
+      return 0;
+    }
+    int left = totalSum(root.left);
+    int right = totalSum(root.right);
+    return left + right + root.val;
+  }
+  public static void changeTree(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    changeTree(root.left);
+    int temp = root.val;
+    root.val = sumA;
+    sumA -= temp;
+    changeTree(root.right);
+  }
+
+  /**
+   * https://leetcode.com/problems/count-good-nodes-in-binary-tree/
+   */
+  public static int goodNodes(TreeNode root) {
+    int max = Integer.MIN_VALUE;
+    return totalNode(root, max);
+  }
+
+  public static int totalNode(TreeNode root, int max) {
+    if (root == null) {
+      return 0;
+    }
+
+    int currentCount = root.val >= max ? 1 : 0;
+    currentCount += totalNode(root.left, Math.max(root.val, max));
+    currentCount += totalNode(root.right, Math.max(root.val, max));
+    return currentCount;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/create-binary-tree-from-descriptions/
+   */
+
+  public static TreeNode createBinaryTree(int[][] descriptions) {
+    TreeNode root = null;
+
+    class Child {
+
+      Integer leftChild;
+      Integer rightChild;
+
+      public Child() {
+        leftChild = null;
+        rightChild = null;
+      }
+
+      public Child(Integer leftChild, Integer rightChild) {
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+      }
+    }
+
+    Set<Integer> childSet = new HashSet<>();
+
+    for (int i = 0; i < descriptions.length; i++) {
+
+      childSet.add(descriptions[i][1]);
+
+    }
+
+    int rootVal = -1;
+
+    for (int i = 0; i < descriptions.length; i++) {
+
+      if (!childSet.contains(descriptions[i][0])) {
+        root = new TreeNode(descriptions[i][0]);
+      }
+
+    }
+
+    Map<Integer, Child> parentMap = new HashMap<>();
+
+    for (int i = 0; i < descriptions.length; i++) {
+
+      if (!parentMap.containsKey(descriptions[i][0])) {
+        Child c = new Child();
+
+        if (descriptions[i][2] == 1) {
+          c.leftChild = descriptions[i][1];
+        } else {
+          c.rightChild = descriptions[i][1];
+        }
+
+        parentMap.put(descriptions[i][0], c);
+      } else {
+
+        Child c = parentMap.get(descriptions[i][0]);
+        if (descriptions[i][2] == 1) {
+          c.leftChild = descriptions[i][1];
+        } else {
+          c.rightChild = descriptions[i][1];
+        }
+        parentMap.put(descriptions[i][0], c);
+      }
+
+    }
+
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+
+    while (!q.isEmpty()) {
+
+      TreeNode temp = q.poll();
+
+      if (!parentMap.containsKey(temp.val)) {
+        continue;
+      }
+
+      if (parentMap.get(temp.val).leftChild != null) {
+        TreeNode left = new TreeNode(parentMap.get(temp.val).leftChild);
+        temp.left = left;
+        q.add(left);
+      }
+
+      if (parentMap.get(temp.val).rightChild != null) {
+        TreeNode right = new TreeNode(parentMap.get(temp.val).rightChild);
+        temp.right = right;
+        q.add(right);
+      }
+
+    }
+
+    return root;
+  }
+
+
+
+
+
+
+  public static void bfs(int start, int[][] mat) {
+
+    Queue<Integer> q = new LinkedList<>();
+    boolean visited[] = new boolean[mat.length];
+    int v = mat.length;
+    q.add(start);
+    visited[start] = true;
+
+    while (!q.isEmpty()) {
+
+      int x = q.poll();
+      System.out.print(x + "->");
+
+      for (int i = 0; i < v; i++) {
+        if (mat[x][i] == 1 && !visited[i]) {
+
+          q.add(i);
+          visited[i] = true;
+
+        }
+      }
+
+    }
+    System.out.println();
+
+  }
+
+
+  public static void treeToArray(TreeNode root){
+
+    List<Integer> list = new ArrayList<>();
+
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+    list.add(root.val);
+    while (!q.isEmpty()) {
+
+      TreeNode temp = q.poll();
+
+      if (temp.left != null) {
+        q.add(temp.left);
+        list.add(temp.left.val);
+      } else {
+        list.add(null);
+      }
+
+      if (temp.right != null) {
+        q.add(temp.right);
+        list.add(temp.right.val);
+      } else {
+        list.add(null);
+      }
+
+    }
+
+    System.out.println(list);
+  }
+
+  /**
+   * https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/
+   */
+  public static TreeNode lcaDeepestLeaves(TreeNode root) {
+    if (root.left == null && root.right == null) {
+      return root;
+    }
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+    int height = height(root);
+    int level = 0;
+
+    int n1 = -1;
+    int n2 = -1;
+
+    while (!q.isEmpty()) {
+      int n = q.size();
+
+      if (level == height - 1) {
+        if (n > 1) {
+          n1 = q.poll().val;
+          while (q.size() > 1) {
+            q.poll();
+          }
+
+          n2 = q.poll().val;
+        } else if (n == 1) {
+          return new TreeNode(q.poll().val);
+        }
+        break;
+      }
+
+      for (int i = 1; i <= n; i++) {
+
+        if (q.isEmpty()) {
+          break;
+        }
+
+        TreeNode temp = q.poll();
+        //n1 = temp.val;
+        if (temp.left != null) {
+          q.add(temp.left);
+        }
+
+        if (temp.right != null) {
+          q.add(temp.right);
+        }
+      }
+
+      level++;
+    }
+
+    return lca(root, n1, n2);
+
+  }
+
+  private static int height(TreeNode root) {
 
     if (root == null) {
       return 0;
     }
 
-    List<Integer> count = new ArrayList<>(1);
-    List<Integer> sum = new ArrayList<>(1);
-    List<Integer> countNode = new ArrayList<>(1);
-    count.add(0);
-    countNode.add(1);
-    sum.add(root.val);
-    avgRec(root, count, sum, countNode);
-    return count.get(0);
+    int l = height(root.left);
+    int r = height(root.right);
+
+    return Math.max(l, r) + 1;
   }
 
-  public static void avgRec(TreeNode root, List<Integer> count, List<Integer> sum,
-      List<Integer> countNode) {
+  private static TreeNode lca(TreeNode root, int n1, int n2) {
+
+    if (root == null) {
+      return null;
+    }
+
+    if (root.val == n1 || root.val == n2) {
+      return root;
+    }
+
+    TreeNode left = lca(root.left, n1, n2);
+    TreeNode right = lca(root.right, n1, n2);
+
+    if (left == null) {
+      return right;
+    }
+
+    if (right == null) {
+      return left;
+    }
+    return root;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+   */
+  public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    if (root == null) {
+      return ans;
+    }
+
+    boolean flag = false;
+
+    Stack<TreeNode> stack = new Stack<>();
+
+    stack.add(root);
+
+
+    while (!stack.isEmpty()) {
+
+      int n = stack.size();
+      flag = !flag;
+
+      Stack<TreeNode> curr = new Stack<>();
+      List<Integer> list = new ArrayList<>();
+
+      for (int i = 1; i <= n; i++) {
+        TreeNode temp = stack.pop();
+        list.add(temp.val);
+        if (flag) {
+          if (temp.left != null) {
+            curr.push(temp.left);
+          }
+          if (temp.right != null) {
+            curr.push(temp.right);
+          }
+        } else {
+          if (temp.right != null) {
+            curr.push(temp.right);
+          }
+          if (temp.left != null) {
+            curr.push(temp.left);
+          }
+        }
+
+      }
+
+      ans.add(list);
+      stack = curr;
+
+    }
+
+    return ans;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/kth-smallest-element-in-a-bst/submissions/
+   */
+
+  public int kthSmallest(TreeNode root, int k) {
+    PriorityQueue<Integer> pq = new PriorityQueue<>();
+    inorder(root, pq);
+
+    for (int i = 1; i < k; i++) {
+
+      pq.poll();
+
+    }
+
+    return pq.poll();
+  }
+
+  public void inorder(TreeNode root, PriorityQueue<Integer> pq) {
 
     if (root == null) {
       return;
     }
 
-    avgRec(root.left, count, sum, countNode);
-    avgRec(root.right, count, sum, countNode);
+    inorder(root.left, pq);
+    pq.add(root.val);
+    inorder(root.right, pq);
 
-    int sum1 = sum.get(0);
-    int countNode1 = countNode.get(0);
-
-    if (sum1 / countNode1 == root.val) {
-      count.set(0, count.get(0) + 1);
-    }
-
-    sum.set(0, root.val + sum.get(0));
-    countNode.set(0, countNode.get(0) + 1);
   }
+
 
   public static void main(String[] args) {
-    Node root = Util.createBst(new Integer[]{4, 2, 5, 7, 1, 2, 3, null, null, 6});
-    System.out.println(sumOfLongRootToLeafPath(root));
-  }
+//    TreeNode root = Util.createBst2(new Integer[]{5, 9, 6, null, null, 5, 8});
+//    System.out.println(goodNodes(root));
+//    TreeNode root = createBinaryTree(new int[][]{{8,25,1},{60,61,1},{90,1,1},{4,3,1},{100,22,0},{8,4,0},{1,100,1},{60,65,0},{22,60,1},{100,8,1},{52,90,1},{65,28,0}});
+//    treeToArray(root);
 
+  //  TreeNode root = Util.createBst2(new Integer[]{1,2,3,null,4,6,null,15,5,10,null,null,null,null,7,11,null,8,12,null,null,null,9,13,14});
+    TreeNode root = Util.createBst2(new Integer[]{3,9,20,null,null,15,7});
+
+    System.out.println(zigzagLevelOrder(root));
+  }
 
 }
 

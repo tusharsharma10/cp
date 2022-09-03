@@ -227,10 +227,16 @@ public class Medium {
     }
   }
 
+  /**
+   * https://leetcode.com/problems/word-search/
+   */
+
+  public static boolean exist(char[][] board, String word) {
+    return false;
+  }
+
 
   public static void main(String[] args) {
-    //smallestSubsequence("bcabc");
-    //nextPermutation2(new int[]{4,2,0,2,3,2,0});
-    System.out.println(findPermutation("ABC"));
+
   }
 }

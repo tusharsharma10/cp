@@ -214,8 +214,51 @@ public class PrefixSum {
     return (a - n) % k;
   }*/
 
+  /**
+   * https://leetcode.com/problems/max-consecutive-ones-iii/
+   */
+
+  public static int longestOnes(int[] arr, int k) {
+    int i = 0;
+    int j = 0;
+
+    int countz = 0;
+    int result = 0;
+
+    while (i < arr.length) {
+      if (arr[i] == 0) {
+        countz++;
+      }
+
+      while (countz > k) {
+        if (arr[j] == 0) {
+          countz--;
+        }
+        j++;
+      }
+
+      int len = i - j + 1;
+
+      result = Math.max(result, len);
+
+      i++;
+    }
+
+    return result;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/maximize-the-confusion-of-an-exam/
+   */
+
+  public static int maxConsecutiveAnswers(String answerKey, int k) {
+    return 1;
+  }
+
+
   public static void main(String[] args) {
-    System.out.println(checkSubarraySum(new int[]{1, 2, 12}, 6));
+    System.out.println(longestOnes(new int[]{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0}, 2));
   }
 
 }

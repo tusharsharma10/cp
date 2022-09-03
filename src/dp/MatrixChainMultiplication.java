@@ -1,6 +1,8 @@
 package dp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MatrixChainMultiplication {
 
@@ -70,6 +72,66 @@ public class MatrixChainMultiplication {
 
   }
 
+  /**
+   * https://leetcode.com/problems/partition-array-for-maximum-sum/
+   */
+
+  public static int maxSumAfterPartitioning(int[] arr, int k) {
+    int N = arr.length;
+    int[][] dp = new int[N][N];
+    return maxSumAfterPartitioningDp(0, N - 1, arr, N, k,dp);
+  }
+
+  private static int maxSumAfterPartitioningDp(int i, int j, int[] arr, int N, int width,
+      int[][] dp) {
+
+    if (i >= j) {
+      return 0;
+    }
+
+    int max = Integer.MIN_VALUE;
+
+    for (int k = i; k <= width && k < j; k++) {
+      if (dp[i][k] == 0) {
+        dp[i][k] = maxSumAfterPartitioningDp(i, k, arr, N, width, dp);
+      }
+      if (dp[k + 1][j] == 0) {
+        dp[k + 1][j] = maxSumAfterPartitioningDp(k + 1, j, arr, N, width, dp);
+      }
+      int temp = dp[i][k] + dp[k + 1][j] + arr[i - 1] * arr[k] * arr[j];
+      max = Math.min(max, temp);
+    }
+
+    return max;
+
+  }
+
+  private static int maxSumAfterPartitioningDp(int[] arr, int k) {
+
+    int n = arr.length;
+    int[] dp = new int[n + 1];
+    // base case
+    dp[0] = 0;
+
+    for (int i = 1; i < n + 1; i++) {
+      // calculating the max element accounted so far for each window
+      int maxEle = arr[i - 1];
+      // calculating the max sum accumulated so far
+      int maxSum = arr[i - 1];
+
+      for (int j = i; j >= i - k + 1 && j >= 1; j--) {
+        // dp has len=n+1 while arr has len=n, so j-1 is used
+        maxEle = Math.max(maxEle, arr[j - 1]);
+        // same logic for j-1 and window size is (i-j+1)
+        int width = i - j + 1;
+        maxSum = Math.max(maxSum, dp[j - 1] + maxEle * width);
+      }
+      dp[i] = maxSum;
+    }
+    return dp[n];
+
+  }
+
 
   /**
    * Palindrome Partitioning
@@ -129,6 +191,11 @@ public class MatrixChainMultiplication {
 
     return ans;
   }
+
+  /**
+   * https://leetcode.com/problems/palindrome-partitioning/
+   */
+
 
   private static boolean isPalindrome(String s, int low, int high) {
 

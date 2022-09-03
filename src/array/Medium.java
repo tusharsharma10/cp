@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import trees.Node;
+import java.util.TreeSet;
 
 public class Medium {
 
@@ -471,11 +471,429 @@ public class Medium {
   }
 
 
+  /**
+   * https://leetcode.com/problems/longest-consecutive-sequence/
+   */
+
+  public static int longestConsecutive(int[] nums) {
+
+    if(nums.length == 0){
+      return 0;
+    }
+
+    Set<Integer> set = new TreeSet<>();
+
+    for (int x : nums) {
+      set.add(x);
+    }
+
+    int ans = 1;
+
+    int len = 1;
+    int prev = Integer.MIN_VALUE;
+
+    for (int x : set) {
+
+      if (prev != Integer.MIN_VALUE && x == prev + 1) {
+        len++;
+        ans = Math.max(ans,len);
+      }
+      else{
+        len = 1;
+      }
+      prev = x;
+    }
 
 
+    return ans;
+  }
+
+  /**
+   * https://leetcode.com/problems/perfect-squares/
+   */
+
+  public static int numSquares(int n) {
+
+    int start = (int) Math.sqrt(n);
+    int[] dp = new int[n + 1];
+
+    for (int i = 1; i <= start; i++) {
+     // nearby squares 1,4,9......
+      int square = i * i;
+
+      for (int j = square; j <= n; j++) {
+       // base case
+        if (i == 1) {
+          dp[j] = j;
+          continue;
+        }
+        //
+        dp[j] = Math.min(dp[j], 1 + dp[j - square]);
+      }
+    }
+    return dp[n];
+  }
+
+
+  /**
+   * https://leetcode.com/problems/single-number/
+   *
+   * XOR
+   * If input bits are the same, then the output will be false(0) else true(1). XOR table: X.
+   */
+
+  public static int singleNumber(int[] nums) {
+    int sum = 0;
+    for (int i = 0; i < nums.length; i++) {
+      sum = sum ^ nums[i];
+    }
+    return sum;
+  }
+
+  /**
+   * https://leetcode.com/problems/4sum-ii/
+   * Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:
+   *
+   *     0 <= i, j, k, l < n
+   *     nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+   */
+
+  public static int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+
+    int n = nums1.length;
+    if (n == 0) {
+      return 0;
+    }
+    int res = 0;
+
+    HashMap<Integer, Integer> map = new HashMap<>();
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        map.put(nums1[i] + nums2[j], 1 + map.getOrDefault(nums1[i] + nums2[j], 0));
+      }
+    }
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        res += map.getOrDefault(-1 * (nums3[i] + nums4[j]), 0);
+      }
+    }
+    return res;
+
+  }
+
+  /**
+   * https://leetcode.com/problems/4sum/
+   */
+
+
+  public List<List<Integer>> fourSum(int[] nums, int target) {
+    List<List<Integer>> ans = new ArrayList<>();
+    Arrays.sort(nums);
+    ksum(4, nums, 0, new ArrayList<>(), target + 0L,ans);
+    return ans;
+  }
+
+  private void ksum(int k, int[] nums, int i, List<Integer> list, long target, List<List<Integer>> ans) {
+    if (k == 2) {
+      int l = i;
+      int r = nums.length - 1;
+      while (l < r) {
+        int sum = nums[l] + nums[r];
+        if (sum < target) {
+          l++;
+        } else if (sum > target) {
+          r--;
+        } else {
+          List<Integer> temp = new ArrayList<>();
+          for (int j : list) {
+            temp.add(j);
+          }
+          temp.add(nums[l]);
+          temp.add(nums[r]);
+          ans.add(temp);
+          l++;
+          while (l < r && nums[l] == nums[l - 1]) {
+            l++;
+          }
+        }
+      }
+      return;
+    }
+
+    // for k = 3 j = 0 to j <= len - 3
+    for (int j = i; j <= nums.length - k; j++) {
+      if (j != i && nums[j] == nums[j - 1]) {
+        continue;
+      }
+      list.add(nums[j]);
+      ksum(k - 1, nums, j + 1, list, target - nums[j], ans);
+      //backtrack
+      list.remove(list.size() - 1);
+    }
+  }
+
+  /**
+   * https://leetcode.com/problems/longest-common-prefix/submissions/
+   */
+
+  public static String longestCommonPrefix(String[] strs) {
+
+    if (strs.length == 0) {
+      return "";
+    }
+
+    if (strs.length == 1) {
+      return strs[0];
+    }
+
+    String ans = "";
+    int minLen = Integer.MAX_VALUE;
+
+    int max = 0;
+
+    for (int i = 0; i < strs.length; i++) {
+      minLen = Math.min(minLen, strs[i].length());
+      ;
+    }
+
+    int localMax = 0;
+    String localAns = "";
+
+    for (int i = 0; i < minLen; i++) {
+      char c = strs[0].charAt(i);
+      boolean flag = true;
+
+      for (String s : strs) {
+        if (s.charAt(i) == c) {
+          continue;
+        } else {
+          flag = false;
+          break;
+        }
+      }
+
+      if (flag) {
+//        localMax = localMax + 1;
+//        localAns += String.valueOf(c);
+        ans += c;
+      }
+
+      if (!flag) {
+
+       /* if (max <= localMax) {
+          max = localMax;
+          ans = localAns;
+        }
+        localMax = 0;
+        localAns = "";*/
+
+        break;
+      }
+
+    }
+
+   /* if (max <= localMax) {
+      max = localMax;
+      ans = localAns;
+    }*/
+
+    return ans;
+  }
+
+  /**
+   * https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/
+   */
+
+  public int strStr(String haystack, String needle) {
+    return haystack.indexOf(needle);
+  }
+
+  /**
+   * https://leetcode.com/problems/divide-two-integers/
+   */
+
+  public static int divide(int dividend, int divisor) {
+
+    if (dividend >= Integer.MAX_VALUE) {
+      dividend = Integer.MAX_VALUE;
+    }
+
+    if (dividend <= Integer.MIN_VALUE) {
+      dividend = Integer.MIN_VALUE;
+    }
+
+    if(dividend == Integer.MIN_VALUE && divisor == -1){
+      return Integer.MAX_VALUE;
+    }
+
+    int ans = dividend / divisor;
+
+    return ans;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/plus-one/submissions/
+   */
+
+  public int[] plusOne(int[] digits) {
+    int posn = digits.length;
+    List<Integer> ans = new ArrayList<>();
+    ans.add(0);
+
+    for (int x : digits) {
+      ans.add(x);
+    }
+
+    while (ans.get(posn) == 9) {
+
+      ans.set(posn, 0);
+      posn--;
+    }
+
+    ans.set(posn, 1 + ans.get(posn));
+
+    if (ans.get(0) == 0) {
+      int[] arr = new int[ans.size() - 1];
+      for (int i = 0; i < arr.length; i++) {
+        arr[i] = ans.get(i + 1);
+      }
+      return arr;
+    } else {
+
+      int[] arr = new int[ans.size()];
+
+      for (int i = 0; i < arr.length; i++) {
+        arr[i] = ans.get(i);
+      }
+      return arr;
+    }
+
+  }
+
+  /**
+   * https://leetcode.com/problems/permutations/
+   */
+
+  public static List<List<Integer>> permute(int[] nums) {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> s = new ArrayList<>();
+    for (int x : nums) {
+      s.add(x);
+    }
+    Set<List<Integer>> set = new HashSet<>();
+    permuteRec(s, new ArrayList<>(), set);
+    for (List<Integer> x : set) {
+      ans.add(x);
+    }
+    return ans;
+  }
+
+  private static void permuteRec(List<Integer> s, List<Integer> s1, Set<List<Integer>> set) {
+
+    if (s.size() == 0) {
+      List<Integer> temp = new ArrayList<>(s1);
+      set.add(temp);
+      return;
+    }
+
+    for (int i = 0; i < s.size(); i++) {
+      int x = s.get(i);
+      List<Integer> left = s.subList(0, i);
+      List<Integer> right = s.subList(i + 1, s.size());
+      List<Integer> combine = new ArrayList<>();
+      combine.addAll(left);
+      combine.addAll(right);
+      s1.add(x);
+      permuteRec(combine, s1, set);
+      s1.remove(s1.size() - 1);
+    }
+
+  }
+
+  /**
+   * https://leetcode.com/problems/combinations/
+   */
+
+  public static List<List<Integer>> combine(int n, int k) {
+    List<List<Integer>> ans = new ArrayList<>();
+    List<Integer> temp = new ArrayList<>();
+    combinations(n, k, ans, temp);
+    return ans;
+  }
+
+  public static void combinations(int n, int k, List<List<Integer>> ans, List<Integer> temp) {
+
+    if (k == 0) {
+      ans.add(new ArrayList(temp));
+      return;
+    }
+
+    if (n == 0) {
+      return;
+    }
+
+//         We are not taking n
+    combinations(n - 1, k, ans, temp);
+
+//         We are taking n
+    temp.add(n);
+    combinations(n - 1, k - 1, ans, temp);
+    temp.remove(temp.size() - 1);
+  }
+
+
+  /**
+   * https://leetcode.com/problems/set-matrix-zeroes/
+   *
+   * this uses some weird trick hence is not intuitive, best is o(m+n) solution
+   */
+
+  public static void setZeroes(int[][] matrix) {
+
+    boolean isCol = false;
+
+    for (int i = 0; i < matrix.length; i++) {
+
+      if (matrix[i][0] == 0) {
+        isCol = true;
+      }
+
+      for (int j = 1; j < matrix[0].length; j++) {
+        if (matrix[i][j] == 0) {
+          matrix[i][0] = 0;
+          matrix[0][j] = 0;
+        }
+      }
+    }
+
+    for (int i = 1; i < matrix.length; i++) {
+      for (int j = 1; j < matrix[0].length; j++) {
+        if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+
+    if (matrix[0][0] == 0) {
+      // make the columns 0 for row = 0
+      for (int i = 0; i < matrix[0].length; i++) {
+        matrix[0][i] = 0;
+      }
+    }
+
+    if (isCol == true) {
+      for (int i = 0; i < matrix.length; i++) {
+        matrix[i][0] = 0;
+      }
+    }
+
+  }
 
   public static void main(String[] args) {
-    System.out.println(findLongestConseqSubseq(
-        new int[]{6, 6, 2, 3, 1, 4, 1, 5, 6, 2, 8, 7, 4, 2, 1, 3, 4, 5, 9, 6}, 20));
+    System.out.println(divide(-2147483648, -1));
   }
+
 }

@@ -7,25 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-class ListNode {
-
-  public int val;
-  public ListNode next;
-
-  ListNode() {
-  }
-
-  ListNode(int val) {
-    this.val = val;
-  }
-
-  ListNode(int val, ListNode next) {
-    this.val = val;
-    this.next = next;
-  }
-
-}
-
 class Node {
 
   public int val;

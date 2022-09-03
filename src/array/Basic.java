@@ -404,6 +404,47 @@ public class Basic {
     return cnt;
   }
 
+  /**
+   * https://leetcode.com/problems/pascals-triangle/submissions/
+   */
+
+  public List<List<Integer>> generate(int numRows) {
+    List<List<Integer>> ans = new ArrayList<>();
+
+    List<Integer> list1 = new ArrayList<>();
+    list1.add(1);
+    ans.add(list1);
+
+    if (numRows == 1) {
+      return ans;
+    }
+
+    List<Integer> list2 = new ArrayList<>();
+    list2.add(1);
+    list2.add(1);
+
+    ans.add(list2);
+
+    for (int i = 2; i < numRows; i++) {
+
+      List<Integer> list = new ArrayList<>();
+      list.add(1);
+
+      List<Integer> upperList = ans.get(i - 1);
+
+      for (int j = 0; j < upperList.size() - 1; j++) {
+
+        list.add(upperList.get(j) + upperList.get(j + 1));
+      }
+
+      list.add(1);
+
+      ans.add(list);
+    }
+
+    return ans;
+  }
+
   public static void main(String[] args) {
 
     int[] arr = {1, 1, 1, 1, 1};
