@@ -1,5 +1,6 @@
 package array;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -255,8 +256,6 @@ public class Medium {
 
     }
 
-
-
     /**
      * Why to use this loop
      */
@@ -278,7 +277,8 @@ public class Medium {
   /**
    * https://practice.geeksforgeeks.org/problems/longest-consecutive-subsequence2449/1
    *
-   * Find the length of the longest sub-sequence such that elements in the subsequence are consecutive integers
+   * Find the length of the longest sub-sequence such that elements in the subsequence are
+   * consecutive integers
    */
 
   public static int findLongestConseqSubseq(int arr[], int N) {
@@ -345,10 +345,9 @@ public class Medium {
    * You are given an array prices where prices[i] is the price of a given stock on the ith day.
    * Find the maximum profit you can achieve. You may complete at most two transactions.
    *
-   * Input: prices = [3,3,5,0,0,3,1,4]
-   * Output: 6
-   * Explanation: Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
-   * Then buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.
+   * Input: prices = [3,3,5,0,0,3,1,4] Output: 6 Explanation: Buy on day 4 (price = 0) and sell on
+   * day 6 (price = 3), profit = 3-0 = 3. Then buy on day 7 (price = 1) and sell on day 8 (price =
+   * 4), profit = 4-1 = 3.
    */
 
   public static int maxProfit2(int[] prices) {
@@ -358,11 +357,11 @@ public class Medium {
   /**
    * https://practice.geeksforgeeks.org/problems/array-subset-of-another-array2317/1
    *
-   * Given two arrays: a1[0..n-1] of size n and a2[0..m-1] of size m.
-   * Task is to check whether a2[] is a subset of a1[] or not. Both the arrays can be sorted or unsorted.
+   * Given two arrays: a1[0..n-1] of size n and a2[0..m-1] of size m. Task is to check whether a2[]
+   * is a subset of a1[] or not. Both the arrays can be sorted or unsorted.
    */
 
-  public static String isSubset( long a1[], long a2[], long n, long m) {
+  public static String isSubset(long a1[], long a2[], long n, long m) {
 
     boolean flag = true;
 
@@ -389,17 +388,12 @@ public class Medium {
   /**
    * https://practice.geeksforgeeks.org/problems/triplet-sum-in-array-1587115621/1
    *
-   * Given an array arr of size n and an integer X.
-   * Find if there's a triplet in the array which sums up to the given integer X.
+   * Given an array arr of size n and an integer X. Find if there's a triplet in the array which
+   * sums up to the given integer X.
    *
-   * Input:
-   * n = 6, X = 13
-   * arr[] = [1 4 45 6 10 8]
-   * Output:1
+   * Input: n = 6, X = 13 arr[] = [1 4 45 6 10 8] Output:1
    *
-   * Explanation:
-   * The triplet {1, 4, 8} in
-   * the array sums up to 13.
+   * Explanation: The triplet {1, 4, 8} in the array sums up to 13.
    */
 
   public static boolean find3Numbers(int A[], int n, int X) {
@@ -431,12 +425,11 @@ public class Medium {
   }
 
   /**
-   *  https://practice.geeksforgeeks.org/problems/smallest-subarray-with-sum-greater-than-x5651/1
-   *  Input:
-   *  A[] = {1, 4, 45, 6, 0, 19}
-   *  x  =  51
+   * https://practice.geeksforgeeks.org/problems/smallest-subarray-with-sum-greater-than-x5651/1
+   * Input: A[] = {1, 4, 45, 6, 0, 19} x  =  51
    *
-   *  Given an array of integers (A[])  and a number x, find the length of smallest subarray with sum greater than the given value.
+   * Given an array of integers (A[])  and a number x, find the length of smallest subarray with sum
+   * greater than the given value.
    */
 
   public static int smallestSubWithSum(int a[], int n, int x) {
@@ -477,7 +470,7 @@ public class Medium {
 
   public static int longestConsecutive(int[] nums) {
 
-    if(nums.length == 0){
+    if (nums.length == 0) {
       return 0;
     }
 
@@ -496,14 +489,12 @@ public class Medium {
 
       if (prev != Integer.MIN_VALUE && x == prev + 1) {
         len++;
-        ans = Math.max(ans,len);
-      }
-      else{
+        ans = Math.max(ans, len);
+      } else {
         len = 1;
       }
       prev = x;
     }
-
 
     return ans;
   }
@@ -518,11 +509,11 @@ public class Medium {
     int[] dp = new int[n + 1];
 
     for (int i = 1; i <= start; i++) {
-     // nearby squares 1,4,9......
+      // nearby squares 1,4,9......
       int square = i * i;
 
       for (int j = square; j <= n; j++) {
-       // base case
+        // base case
         if (i == 1) {
           dp[j] = j;
           continue;
@@ -538,8 +529,7 @@ public class Medium {
   /**
    * https://leetcode.com/problems/single-number/
    *
-   * XOR
-   * If input bits are the same, then the output will be false(0) else true(1). XOR table: X.
+   * XOR If input bits are the same, then the output will be false(0) else true(1). XOR table: X.
    */
 
   public static int singleNumber(int[] nums) {
@@ -551,11 +541,10 @@ public class Medium {
   }
 
   /**
-   * https://leetcode.com/problems/4sum-ii/
-   * Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:
+   * https://leetcode.com/problems/4sum-ii/ Given four integer arrays nums1, nums2, nums3, and nums4
+   * all of length n, return the number of tuples (i, j, k, l) such that:
    *
-   *     0 <= i, j, k, l < n
-   *     nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+   * 0 <= i, j, k, l < n nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
    */
 
   public static int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
@@ -591,13 +580,14 @@ public class Medium {
   public List<List<Integer>> fourSum(int[] nums, int target) {
     List<List<Integer>> ans = new ArrayList<>();
     Arrays.sort(nums);
-    ksum(4, nums, 0, new ArrayList<>(), target + 0L,ans);
+    ksum(4, nums, 0, new ArrayList<>(), target + 0, ans);
     return ans;
   }
 
-  private void ksum(int k, int[] nums, int i, List<Integer> list, long target, List<List<Integer>> ans) {
+  private void ksum(int k, int[] nums, int startingIndex, List<Integer> list, long target,
+      List<List<Integer>> ans) {
     if (k == 2) {
-      int l = i;
+      int l = startingIndex;
       int r = nums.length - 1;
       while (l < r) {
         int sum = nums[l] + nums[r];
@@ -623,8 +613,8 @@ public class Medium {
     }
 
     // for k = 3 j = 0 to j <= len - 3
-    for (int j = i; j <= nums.length - k; j++) {
-      if (j != i && nums[j] == nums[j - 1]) {
+    for (int j = startingIndex; j <= nums.length - k; j++) {
+      if (j != startingIndex && nums[j] == nums[j - 1]) {
         continue;
       }
       list.add(nums[j]);
@@ -724,7 +714,7 @@ public class Medium {
       dividend = Integer.MIN_VALUE;
     }
 
-    if(dividend == Integer.MIN_VALUE && divisor == -1){
+    if (dividend == Integer.MIN_VALUE && divisor == -1) {
       return Integer.MAX_VALUE;
     }
 
@@ -892,8 +882,90 @@ public class Medium {
 
   }
 
+  /**
+   * https://leetcode.com/problems/third-maximum-number/
+   */
+
+  public static int thirdMax(int[] nums) {
+
+    Map<Integer, Integer> map = new HashMap<>();
+
+    for (int x : nums) {
+      map.put(x, 1 + map.getOrDefault(x, 0));
+    }
+
+    if (map.size() < 3) {
+      return findMax(nums);
+    }
+
+    int max1 = Integer.MIN_VALUE;
+    int max2 = Integer.MIN_VALUE;
+    int max3 = Integer.MIN_VALUE;
+
+    for (int i = 0; i < nums.length; i++) {
+      int currNum = nums[i];
+
+      if (currNum > max1 && currNum > max2 && currNum > max3) {
+        max3 = max2;
+        max2 = max1;
+        max1 = currNum;
+      }
+
+      if (currNum < max1 && currNum > max2 && currNum > max3) {
+        max3 = max2;
+        max2 = currNum;
+      }
+
+      if (currNum < max1 && currNum < max2 && currNum > max3) {
+        max3 = currNum;
+      }
+
+    }
+
+    return max3;
+  }
+
+  /**
+   * https://leetcode.com/problems/add-strings/
+   */
+
+  public String addStrings(String num1, String num2) {
+
+    BigInteger b1 = new BigInteger(num1);
+    BigInteger b2 = new BigInteger(num2);
+
+    BigInteger sum = b1.add(b2);
+
+    return sum.toString();
+  }
+
+  private static int findMax(int[] nums) {
+
+    int max = Integer.MIN_VALUE;
+
+    for (int x : nums) {
+      max = Math.max(max, x);
+    }
+
+    return max;
+  }
+
+  public static String reversePrefix(String word, char ch) {
+
+    int idx = word.indexOf(ch);
+
+    String s1 = word.substring(0, idx + 1);
+    StringBuilder str = new StringBuilder(s1);
+    str.reverse();
+    s1 = str.toString();
+    String s2 = word.substring(idx + 1);
+
+    return s1 + s2;
+  }
+
+
   public static void main(String[] args) {
-    System.out.println(divide(-2147483648, -1));
+    System.out.println(reversePrefix("abcdefd", 'd'));
   }
 
 }

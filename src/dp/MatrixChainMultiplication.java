@@ -1,5 +1,6 @@
 package dp;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +80,7 @@ public class MatrixChainMultiplication {
   public static int maxSumAfterPartitioning(int[] arr, int k) {
     int N = arr.length;
     int[][] dp = new int[N][N];
-    return maxSumAfterPartitioningDp(0, N - 1, arr, N, k,dp);
+    return maxSumAfterPartitioningDp(0, N - 1, arr, N, k, dp);
   }
 
   private static int maxSumAfterPartitioningDp(int i, int j, int[] arr, int N, int width,
@@ -218,21 +219,47 @@ public class MatrixChainMultiplication {
   }
 
   /**
-   * Given a boolean expression S of length N with following symbols.
-   * Symbols
-   *     'T' ---> true
-   *     'F' ---> false
-   * and following operators filled between symbols
-   * Operators
-   *     &   ---> boolean AND
-   *     |   ---> boolean OR
-   *     ^   ---> boolean XOR
-   * Count the number of ways we can parenthesize the expression so that the value of expression evaluates to true.
+   * Given a boolean expression S of length N with following symbols. Symbols 'T' ---> true 'F' --->
+   * false and following operators filled between symbols Operators &   ---> boolean AND |   --->
+   * boolean OR ^   ---> boolean XOR Count the number of ways we can parenthesize the expression so
+   * that the value of expression evaluates to true.
    */
 
 
+  public double largestSumOfAverages(int[] nums, int k) {
+    int n = nums.length;
+    double[][] dp = new double[n][k + 1];
+    return largestRec(nums, k, 0, dp);
+  }
+
+  private double largestRec(int[] nums, int k, int start, double[][] dp) {
+    if (dp[start][k] != 0) {
+      return dp[start][k];
+    }
+    if (k == 1) {
+      double sum = 0;
+      for (int i = start; i < nums.length; i++) {
+        sum += nums[i];
+      }
+      dp[start][k] = sum / (nums.length - start);
+      return dp[start][k];
+    }
+    double sum = 0;
+    double max = 0;
+    for (int i = start; i <= nums.length - k; i++) {
+      sum += nums[i];
+      max = Math.max(max, sum / (i - start + 1) + largestRec(nums, k - 1, i + 1, dp));
+    }
+    dp[start][k] = max;
+    return max;
+  }
+
 
   public static void main(String[] args) {
-
+    String num1 = "2";
+    String num2 = "3";
+    BigInteger b1 = new BigInteger(num1);
+    BigInteger b2 = new BigInteger(num2);
+    System.out.println(b1.multiply(b2).toString());
   }
 }

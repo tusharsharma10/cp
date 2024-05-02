@@ -3,8 +3,10 @@ package string;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -211,6 +213,246 @@ public class Medium {
     return ans2;
   }
 
+  /**
+   * https://leetcode.com/problems/word-search/
+   * Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+   *
+   *  The word can be constructed from letters of sequentially adjacent cells,
+   *  where adjacent cells are horizontally or
+   *  vertically neighboring. The same letter cell may not be used more than once.
+   */
+
+  public static boolean exist(char[][] board, String word) {
+
+    char start = word.charAt(0);
+
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[0].length; j++) {
+        if (board[i][j] == start) {
+          if (explore(board, i, j, word, 0)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  private static boolean explore(char[][] board, int i, int j, String word, int count) {
+
+    if (count == word.length()) {
+      return true;
+    }
+
+    if (i >= board.length || j >= board[0].length || i < 0 || j < 0 || board[i][j] != word.charAt(
+        count)) {
+      return false;
+    }
+
+    char temp = board[i][j];
+    board[i][j] = '*';
+
+    boolean flag = explore(board, i + 1, j, word, count + 1) ||
+        explore(board, i - 1, j, word, count + 1) ||
+        explore(board, i, j + 1, word, count + 1) ||
+        explore(board, i, j - 1, word, count + 1);
+
+    //backtrack
+    board[i][j] = temp;
+
+    return flag;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/isomorphic-strings/
+   * not efficient
+   */
+
+  public static boolean isIsomorphic(String s, String t) {
+    Map<Character, Character> dict = new HashMap();
+
+    for (int i = 0; i < s.length(); i++) {
+
+      if (dict.containsKey(s.charAt(i))) {
+        if (dict.get(s.charAt(i)) != t.charAt(i)) {
+          return false;
+        }
+      } else {
+        // if t char already exists in some s char mapping then return false
+        if (dict.containsValue(t.charAt(i))) {
+          return false;
+        } else {
+          dict.put(s.charAt(i), t.charAt(i));
+        }
+      }
+
+    }
+    return true;
+  }
+
+  /**
+   *   https://leetcode.com/problems/add-digits/
+   */
+
+  public static int addDigits(int num) {
+
+    String s;
+    boolean flag = true;
+    int sum = num;
+    while (flag) {
+      s = String.valueOf(sum);
+      if (s.length() == 1) {
+        return Integer.parseInt(String.valueOf(s.charAt(0)));
+      }
+      sum = 0;
+      for (int i = 0; i < s.length(); i++) {
+
+        int x = Integer.parseInt(String.valueOf(s.charAt(i)));
+        sum += x;
+      }
+
+    }
+
+    return -1;
+  }
+
+  /**
+   *  https://leetcode.com/problems/word-pattern/
+   */
+
+  public static boolean wordPattern(String pattern, String s) {
+    String[] arr = s.split(" ");
+    Map<Character, String> map = new HashMap<>();
+
+    if(pattern.length() != arr.length){
+      return false;
+    }
+
+    for (int i = 0; i < pattern.length(); i++) {
+
+      char c = pattern.charAt(i);
+
+      if (map.containsKey(c)) {
+        String temp = map.get(c);
+        if (!temp.equals(arr[i])) {
+          return false;
+        }
+      } else {
+
+        if (map.containsValue(arr[i])) {
+          return false;
+        } else {
+          map.put(c, arr[i]);
+        }
+      }
+
+    }
+    return true;
+  }
+
+  /**
+   * https://leetcode.com/problems/longest-palindrome/
+   */
+
+  public static int longestPalindrome(String s) {
+
+    Map<Character, Integer> map = new HashMap<>();
+
+    for (int i = 0; i < s.length(); i++) {
+      map.put(s.charAt(i), 1 + map.getOrDefault(s.charAt(i), 0));
+    }
+
+    int ans = 0;
+    boolean isfirstodd = false;
+
+    for (Character key : map.keySet()) {
+      if (map.get(key) % 2 == 0) {
+        ans += map.get(key);
+      }
+      // value is odd
+      else {
+        if (isfirstodd == false) {
+          ans += map.get(key);
+          isfirstodd = true;
+        } else {
+          ans += map.get(key) - 1;
+        }
+      }
+    }
+    return ans;
+
+  }
+
+  public String reverseVowels(String s) {
+    int i = 0;
+    int j = s.length() - 1;
+
+    StringBuilder str = new StringBuilder(s);
+
+    while (j > i) {
+
+      char begin = s.charAt(i);
+      char last = s.charAt(j);
+
+      if (!isVowel(begin)) {
+        i++;
+      }
+
+      if (!isVowel(last)) {
+        j--;
+      }
+
+      if (isVowel(begin) && isVowel(last)) {
+        str.setCharAt(i, last);
+        str.setCharAt(j, begin);
+      }
+
+    }
+    return str.toString();
+  }
+
+  private boolean isVowel(char c) {
+    if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'
+        || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+      return true;
+    }
+    return false;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/repeated-substring-pattern/
+   */
+
+  public static boolean repeatedSubstringPattern(String s) {
+    String str = "";
+    int len = s.length();
+
+    for (int i = 0; i <= len / 2; i++) {
+      str = s.substring(0, i);
+      int l = str.length();
+
+      if (l != 0) {
+        int num = len % l;
+
+        if (num == 0) {
+          String temp = s.replace(str, "");
+          if (temp.length() == 0) {
+            return true;
+          }
+        }
+
+      }
+
+    }
+    return false;
+  }
+
+  public static void main(String[] args) {
+    System.out.println(repeatedSubstringPattern("abacab abacab"));
+  }
+
   private static void findPermRec(String s, String s1, Set<String> ans) {
     // s ko pura tod chuke ho to s1 ban chuka hai use set main add karo
     if (s.length() == 0) {
@@ -223,20 +465,6 @@ public class Medium {
       String leftPart = s.substring(0, i);
       String rightPart = s.substring(i + 1);
       findPermRec(leftPart + rightPart, s1 + ch, ans);
-
     }
-  }
-
-  /**
-   * https://leetcode.com/problems/word-search/
-   */
-
-  public static boolean exist(char[][] board, String word) {
-    return false;
-  }
-
-
-  public static void main(String[] args) {
-
   }
 }

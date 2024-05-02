@@ -1,9 +1,37 @@
 package trees;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import linklist.ListNode;
 
 public class Util {
+
+
+  public static List<Integer> treeNodeToArray(TreeNode root) {
+    List<Integer> list = new ArrayList<>();
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+    while (!q.isEmpty()) {
+      TreeNode temp = q.poll();
+      list.add(temp.val);
+      if (temp.left != null) {
+        q.add(temp.left);
+      } else {
+        list.add(null);
+      }
+
+      if (temp.right != null) {
+        q.add(temp.right);
+      } else {
+        list.add(null);
+      }
+    }
+
+    return list;
+  }
+
 
   public static Node createBst(Integer arr[]) {
 
@@ -63,4 +91,32 @@ public class Util {
     return root;
   }
 
+
+  public static List<Integer> createBstArray(TreeNode root) {
+    List<Integer> tree = new ArrayList<>();
+    Queue<TreeNode> q = new LinkedList<>();
+    q.add(root);
+    tree.add(root.val);
+    while (!q.isEmpty()) {
+
+      TreeNode temp = q.poll();
+
+      if (temp.left != null) {
+        q.add(temp.left);
+        tree.add(temp.left.val);
+      } else {
+        tree.add(null);
+      }
+
+      if (temp.right != null) {
+        q.add(temp.right);
+        tree.add(temp.right.val);
+      } else {
+        tree.add(null);
+      }
+
+    }
+
+    return tree;
+  }
 }

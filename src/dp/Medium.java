@@ -346,6 +346,14 @@ public class Medium {
     return ans;
   }
 
+  /**
+   * https://leetcode.com/problems/decode-ways/
+   */
+
+  public int numDecodings(String s) {
+  return 1;
+  }
+
   public static void main(String[] args) {
     //System.out.println(maxProfit2(new int[]{10,15,17,20,16,18,22,20,22,20,23,25},2));
 

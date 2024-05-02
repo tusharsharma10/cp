@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Medium {
 
@@ -103,7 +105,130 @@ public class Medium {
     return coins;
   }
 
+  public static int largestSumAfterKNegations(int[] nums, int k) {
+    int total = 0;
+    int minAbs = Integer.MAX_VALUE;
+
+    // Calculate the initial total and find the minimum absolute value
+    for (int num : nums) {
+      total += Math.abs(num);
+      minAbs = Math.min(minAbs, Math.abs(num));
+    }
+
+    // If k is even, the result remains the same
+    if (k % 2 == 0) {
+      return total;
+    }
+    // If k is odd, subtract twice the minimum absolute value
+    else {
+      return total - 2 * minAbs;
+    }
+  }
+
+  public static boolean canJump(int[] nums) {
+    int lastIndex = nums.length - 1;
+
+    for (int i = nums.length - 2; i >= 0; i--) {
+
+      if (i + nums[i] >= lastIndex) {
+        lastIndex = i;
+      }
+    }
+
+    return lastIndex == 0;
+  }
+
+  /**
+   * https://leetcode.com/problems/jump-game-ii/description/
+   */
+  public static int jump(int[] nums) {
+
+    return 0;
+  }
+
+  public static boolean canPlaceFlowers(int[] flowerbed, int n) {
+    int len = flowerbed.length;
+
+    if (len == 1 && flowerbed[0] == 0) {
+      n = n - 1;
+      return n <= 0;
+    }
+
+    for (int i = 0; i < flowerbed.length; i++) {
+
+      if (n <= 0) {
+        return true;
+      }
+
+      if (i == 0 && i < len - 1 && flowerbed[i + 1] == 0 && flowerbed[i] == 0) {
+        n = n - 1;
+        flowerbed[i] = 1;
+      }
+
+      if (i != 0 && i < len - 1 && flowerbed[i - 1] == 0 && flowerbed[i + 1] == 0
+          && flowerbed[i] == 0) {
+        n = n - 1;
+        flowerbed[i] = 1;
+      }
+
+      if (i != 0 && i == len - 1 && flowerbed[i - 1] == 0 && flowerbed[i] == 0) {
+        n = n - 1;
+        flowerbed[i] = 1;
+      }
+    }
+
+    return n == 0;
+
+  }
+
+  public static String largestOddNumber(String num) {
+    int i = num.length() - 1;
+
+    while (i >= 0) {
+      int x = Integer.valueOf(String.valueOf(num.charAt(i)));
+      if (x % 2 != 1) {
+        num = num.substring(0, i);
+      } else {
+        return num;
+      }
+      i--;
+    }
+
+    return num;
+  }
+
+  /**
+   * https://leetcode.com/problems/longest-subsequence-with-limited-sum/
+   */
+
+  public static int[] answerQueries(int[] nums, int[] queries) {
+    int n = nums.length;
+    int m = queries.length;
+
+    Arrays.sort(nums);
+
+    int[] answer = new int[m];
+
+    for (int i = 0; i < m; i++) {
+      int targetSum = queries[i];
+      int currentSum = 0;
+      int right = 0;
+
+      while (right < n && currentSum + nums[right] <= targetSum) {
+        currentSum += nums[right];
+        right++;
+      }
+
+      answer[i] = right;
+    }
+
+    return answer;
+  }
+
   public static void main(String[] args) {
-    minPartitions("82734");
+    System.out.println(largestOddNumber("35427"));
+
+    TreeSet<Integer> set = new TreeSet<>();
+    set.pollFirst();
   }
 }

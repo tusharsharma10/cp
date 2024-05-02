@@ -3,10 +3,12 @@ package array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Basic {
 
@@ -445,10 +447,130 @@ public class Basic {
     return ans;
   }
 
+  /**
+   * https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+   */
+
+  public static List<Integer> findDisappearedNumbers(int[] nums) {
+
+    List<Integer> ans = new ArrayList<>();
+
+    Map<Integer, Integer> map = new HashMap<>();
+
+    for (int x : nums) {
+      map.put(x, 1 + map.getOrDefault(x, 0));
+    }
+
+    for (int i = 1; i <= nums.length; i++) {
+      map.put(i, map.getOrDefault(i, 0));
+    }
+
+    for (int key : map.keySet()) {
+
+      if (map.get(key) == 0) {
+        ans.add(key);
+      }
+
+    }
+
+    return ans;
+  }
+
+  /**
+   * https://leetcode.com/problems/get-maximum-in-generated-array/
+   */
+
+  public static int getMaximumGenerated(int n) {
+    if (n == 0) {
+      return 0;
+    }
+    int[] nums = new int[n + 1];
+
+    int max = Integer.MIN_VALUE;
+
+    nums[0] = 0;
+    nums[1] = 1;
+
+    for (int i = 0; i <= n; i++) {
+
+      if (2 <= 2 * i && 2 * i <= n) {
+        nums[2 * i] = nums[i];
+      }
+      if (2 <= 2 * i + 1 && 2 * i + 1 <= n) {
+        nums[2 * i + 1] = nums[i] + nums[i + 1];
+      }
+
+    }
+
+    for (int x : nums) {
+      max = Math.max(x, max);
+    }
+
+    return max;
+  }
+
+
+  /**
+   * https://leetcode.com/problems/duplicate-zeros/
+   */
+  public static void duplicateZeros(int[] arr) {
+
+    for (int i = 0; i < arr.length; i++) {
+
+      if (arr[i] == 0 && i != arr.length - 1) {
+        rightShift(arr, i + 1);
+        arr[i + 1] = 0;
+        i++;
+      }
+
+    }
+
+  }
+
+  /**
+   * https://leetcode.com/problems/number-of-arithmetic-triplets/
+   */
+
+  public static int arithmeticTriplets(int[] nums, int diff) {
+
+    int count = 0;
+
+    Map<Integer, Integer> map = new HashMap<>();
+
+    for (int i = 0; i < nums.length; i++) {
+      map.put(nums[i], i);
+    }
+
+    for (int i = 0; i < nums.length - 1; i++) {
+      int j = nums.length - 1;
+
+      while (j > i) {
+
+        int num1 = nums[j] - diff;
+        int num2 = nums[i] + diff;
+
+        if (map.containsKey(num1) && map.containsKey(num2) && num1 == num2) {
+          //System.out.println(nums[i] + " " + num1 + " " + nums[j]);
+          count++;
+        }
+        j--;
+      }
+    }
+
+    return count;
+  }
+
+  private static void rightShift(int[] arr, int pos) {
+
+    for (int i = arr.length - 2; i >= pos; i--) {
+
+      arr[i + 1] = arr[i];
+    }
+
+  }
+
   public static void main(String[] args) {
-
-    int[] arr = {1, 1, 1, 1, 1};
-
-    findPairs(arr, 0);
+    int ans = arithmeticTriplets(new int[]{0, 1, 4, 6, 7, 10}, 3);
+    System.out.println(ans);
   }
 }

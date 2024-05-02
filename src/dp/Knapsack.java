@@ -158,19 +158,15 @@ public class Knapsack {
     int s1 = (int) Math.ceil(x);
 
     // find no. of ways in which s1 exists using count of subsets
-
     int dp[][] = new int[n + 1][s1 + 1];
 
     // base case when sum to be formed is 0 there lies one way by not picking any
-    // element
     for (int i = 0; i <= n; i++) {
-
       dp[i][0] = 1;
     }
 
     // base case when empty set is taken and sum to be formed is 1,2,3.....
     for (int j = 1; j <= s1; j++) {
-
       dp[0][j] = 0;
     }
 
@@ -182,18 +178,14 @@ public class Knapsack {
         if (nums[i - 1] > j || nums[i - 1] == 0) {
           dp[i][j] = dp[i - 1][j];
         }
-
         // sum of all ways of excluding and including of element
         else {
-
           dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
         }
 
       }
     }
-
     return dp[n][s1] * (int) Math.pow(2, numZeroes);
-
   }
 
   /**

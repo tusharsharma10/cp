@@ -36,7 +36,7 @@ public class Hashing {
       }
     }
 
-    for(List<String> l : map.values()){
+    for (List<String> l : map.values()) {
 
       list.add(l);
 
@@ -45,11 +45,15 @@ public class Hashing {
     return list;
   }
 
+  /**
+   * https://leetcode.com/problems/3sum/
+   */
 
   public static List<List<Integer>> threeSum(int[] nums) {
 
     List<List<Integer>> list = new ArrayList<>();
 
+    // sort the array
     Arrays.sort(nums);
 
     for (int i = 0; i < nums.length; i++) {

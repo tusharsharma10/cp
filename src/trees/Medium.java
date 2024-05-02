@@ -664,16 +664,129 @@ public class Medium {
   }
 
 
+  /**
+   * https://leetcode.com/problems/path-sum/
+   */
+
+  public static boolean hasPathSum(TreeNode root, int targetSum) {
+    Set<Integer> allPathsSum = new HashSet<>();
+    calculateSum(root, allPathsSum, 0);
+
+    if (allPathsSum.contains(targetSum)) {
+      return true;
+    }
+    return false;
+  }
+
+  private static void calculateSum(TreeNode root, Set<Integer> allPathsSum, int currSum) {
+
+    if (root == null) {
+      return;
+    }
+
+    if (root.left == null && root.right == null) {
+      allPathsSum.add(root.val + currSum);
+      return;
+    }
+
+    calculateSum(root.left, allPathsSum, currSum + root.val);
+    calculateSum(root.right, allPathsSum, currSum + root.val);
+  }
+
+  /**
+   *  https://leetcode.com/problems/binary-tree-paths/
+   */
+
+  public static List<String> binaryTreePaths(TreeNode root) {
+    List<String> ans = new ArrayList<>();
+    List<List<Integer>> list = new ArrayList<>();
+    recPaths(root, list, new ArrayList<>());
+
+    for (List<Integer> l : list) {
+
+      StringBuilder str = new StringBuilder();
+
+      for (int i = 0; i < l.size(); i++) {
+        int x = l.get(i);
+        if (i == l.size() - 1) {
+          str.append(x);
+          break;
+        }
+
+        str.append(x);
+        str.append("->");
+      }
+
+      ans.add(str.toString());
+    }
+
+    return ans;
+  }
+
+  private static void recPaths(TreeNode root, List<List<Integer>> list, List<Integer> path) {
+
+    if (root == null) {
+      return;
+    }
+
+    if (root.left == null && root.right == null) {
+      path.add(root.val);
+      List<Integer> temp = new ArrayList<>(path);
+      list.add(temp);
+      path.remove(path.size() - 1);
+      return;
+    }
+
+    path.add(root.val);
+    recPaths(root.left, list, path);
+    recPaths(root.right, list, path);
+    path.remove(path.size() - 1);
+  }
+
+  /**
+   * https://leetcode.com/problems/maximum-depth-of-n-ary-tree/submissions/
+   */
+
+  /**
+   * https://leetcode.com/problems/binary-tree-tilt/
+   */
+
+  static int sum2 = 0;
+  static int left = 0;
+  static int right = 0;
+
+  public static int findTilt(TreeNode root) {
+    rec(root);
+    return sum2;
+  }
+
+  private static int rec(TreeNode root) {
+
+    if (root == null) {
+      return 0;
+    }
+
+    int leftTree = rec(root.left);
+    int rightTree = rec(root.right);
+
+    sum2 += Math.abs(leftTree - rightTree);
+    int total = leftTree + rightTree + root.val;
+
+    return total;
+
+  }
+
+
   public static void main(String[] args) {
 //    TreeNode root = Util.createBst2(new Integer[]{5, 9, 6, null, null, 5, 8});
 //    System.out.println(goodNodes(root));
 //    TreeNode root = createBinaryTree(new int[][]{{8,25,1},{60,61,1},{90,1,1},{4,3,1},{100,22,0},{8,4,0},{1,100,1},{60,65,0},{22,60,1},{100,8,1},{52,90,1},{65,28,0}});
 //    treeToArray(root);
 
-  //  TreeNode root = Util.createBst2(new Integer[]{1,2,3,null,4,6,null,15,5,10,null,null,null,null,7,11,null,8,12,null,null,null,9,13,14});
-    TreeNode root = Util.createBst2(new Integer[]{3,9,20,null,null,15,7});
+    //  TreeNode root = Util.createBst2(new Integer[]{1,2,3,null,4,6,null,15,5,10,null,null,null,null,7,11,null,8,12,null,null,null,9,13,14});
+    TreeNode root = Util.createBst2(new Integer[]{4,2,9,3,5,null,7});
 
-    System.out.println(zigzagLevelOrder(root));
+    System.out.println(findTilt(root));
   }
 
 }

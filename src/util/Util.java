@@ -1,9 +1,32 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import linklist.ListNode;
 
 public class Util {
 
+
+  public static ListNode createListNode(Integer[] arr) {
+    ListNode head = new ListNode(arr[0]);
+    ListNode temp = head;
+
+    for (int i = 1; i < arr.length; i++) {
+      temp.next = new ListNode(arr[i]);
+      temp = temp.next;
+    }
+    return head;
+  }
+
+  public static List<Integer> listToArray(ListNode head) {
+    List<Integer> arr = new ArrayList<>();
+    while (head != null) {
+      arr.add(head.val);
+      head = head.next;
+    }
+    return arr;
+  }
 
 
   public static int[] randomArrayGen(int minVal, int maxVal, int numVal) {
